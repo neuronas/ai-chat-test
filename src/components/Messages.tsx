@@ -1,17 +1,33 @@
 
 "use client"
+import type { Message } from './Chat'
 
-export function Messages({msgHistory}:{msgHistory: string[]}) {
+export function Messages({msgHistory}:{msgHistory: Message[]}) {
 
   return (
-    <div className="flex flex-col min-w-0 gap-6 flex-1 overflow-y-scroll pt-4">
-      <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)] list-none">
-        {msgHistory.map((v) => (
-          <li className="mb-2 tracking-[-.01em]">
-            {v}
-          </li>
-        ))}
-      </ol>
+    <div className="h-full p-10 ">
+      <div className="text-sm/6 font-[family-name:var(--font-geist-mono)]">
+        {msgHistory.map((item, k) => {
+          if (item.type === "user") {
+            return (<div key={k} className="flex text-right flex-row-reverse">
+              <div key={k} className="flex border border-zinc-300 bg-gray-300 rounded-xl mb-2 p-3">
+                <span>
+                  {item.text}
+                </span>
+              </div>
+            </div>)
+          } else {
+            return (<div key={k} className="flex">
+              <div key={k} className="flex mb-2 p-3">
+                <span>
+                  {item.text}
+                </span>
+              </div>
+            </div>
+            )
+          }
+        })}
+      </div>
     </div>
   )
 }
