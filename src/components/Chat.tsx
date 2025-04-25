@@ -2,7 +2,7 @@
 "use client"
 import Image from "next/image";
 import { useState } from 'react'
-import { callGroq } from '../actions/groq';
+import { callProvider } from '../actions/provider';
 import { Messages } from './Messages';
 
 export type Message = {
@@ -20,7 +20,7 @@ export function Chat() {
     setMsgHistory(newMsgHistory)
     setQuestion('')
 
-    const answer = await callGroq(question);
+    const answer = await callProvider(question);
     console.log("RR", answer)
     const newMsg: Message = { text: answer, type: "ai" }
     setMsgHistory([...newMsgHistory, newMsg])
