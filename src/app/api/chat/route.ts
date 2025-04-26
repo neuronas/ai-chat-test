@@ -1,14 +1,20 @@
-import { NextRequest } from 'next/server';
-
 import {
     createDataStreamResponse,
     streamText,
 } from 'ai';
 
-import { vertex } from '@ai-sdk/google-vertex';
+import { createVertex } from '@ai-sdk/google-vertex';
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
+    const vertex = createVertex({
+      googleAuthOptions: {
+        credentials: {
+          client_email: process.env.GCP_SERVICE_ACCOUNT_EMAIL,
+          private_key: process.env.GCP_PRIVATE_KEY,
+        },
+      },
+    });
     const { messages } = await req.json();
 
     return createDataStreamResponse({
@@ -24,7 +30,10 @@ export async function POST(req: NextRequest) {
           sendReasoning: true
         });
       },
-      onError: () =>  'Oops, an error occurred!',
+      onError: (error) =>  {
+        console.error(error)
+        return 'Oops, an error occurred!'
+      },
     });
   } catch (error) {
     return new Response(`An error occurred while processing your request! ${error}`, {

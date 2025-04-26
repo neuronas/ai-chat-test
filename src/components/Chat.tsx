@@ -1,8 +1,7 @@
 
 "use client"
 import Image from "next/image";
-import { useState, useRef } from 'react'
-import { callProvider } from '../actions/provider';
+import { useRef } from 'react'
 import { Messages } from './Messages';
 import { useChat } from '@ai-sdk/react';
 
@@ -14,7 +13,6 @@ export function Chat() {
     input,
     handleInputChange,
     handleSubmit,
-    status,
   } = useChat({
     onError: (error) => {
       console.log("error-----------", error)
