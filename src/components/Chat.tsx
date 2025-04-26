@@ -7,36 +7,19 @@ import { Messages } from './Messages';
 import { useChat } from '@ai-sdk/react';
 
 export function Chat() {
-
-  const [question, setQuestion] = useState('');
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const {
     messages,
     input,
     handleInputChange,
-    append,
+    handleSubmit,
     status,
   } = useChat({
     onError: (error) => {
       console.log("error-----------", error)
     }
   });
-
-  async function handleSubmit(e: React.FormEvent<HTMLButtonElement>) {
-    e.preventDefault();
-    const userMessage = input.trim();
-    if (!userMessage) return;
-
-    // Add user's message
-    await append({ role: 'user', content: userMessage });
-
-    // Call Groq API
-    const answer = await callProvider(userMessage);
-
-    // Add AI response
-    await append({ role: 'assistant', content: answer });
-  }
 
   return (
     <div className="flex flex-col bg-gray-100 h-full rounded-xl mb-10 border border-gray-200">
