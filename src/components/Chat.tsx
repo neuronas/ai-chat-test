@@ -1,23 +1,44 @@
 
 "use client"
 import Image from "next/image";
-import { useRef } from 'react'
+import { useState, useRef } from 'react'
 import { Messages } from './Messages';
 import { useChat } from '@ai-sdk/react';
+import FileUpload from './FileUpload';
 
 export function Chat() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const [attachments, setAttachments] = useState<Array<File>>([]);
 
   const {
     messages,
     input,
     handleInputChange,
     handleSubmit,
+    status,
   } = useChat({
     onError: (error) => {
       console.log("error-----------", error)
     }
   });
+
+  const fileArrayToFileList = (files: File[]): FileList => {
+    const dataTransfer = new DataTransfer();
+    files.forEach(file => dataTransfer.items.add(file));
+    return dataTransfer.files;
+  }
+
+  const submit = () => {
+    if (attachments.length) {
+      handleSubmit(undefined, {
+        experimental_attachments: fileArrayToFileList(attachments)
+      });
+
+      setAttachments([]);
+    } else {
+      handleSubmit()
+    }
+  }
 
   return (
     <div className="flex flex-col bg-gray-100 h-full rounded-xl mb-10 border border-gray-200">
@@ -32,10 +53,11 @@ export function Chat() {
           placeholder="Send a message..."
         />
 
-        <div className=" w-1/6">
+        <div className="flex flex-col gap-1 w-1/6">
           <button
-            className="rounded-xl border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto ml-auto"
-            onClick={handleSubmit}
+            disabled={status !== "ready"}
+            className="max-w-xs w-full rounded-xl border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 ml-auto"
+            onClick={submit}
           >
             Send
             <Image
@@ -46,8 +68,8 @@ export function Chat() {
               height={20}
             />
           </button>
+          <FileUpload files={attachments} setFiles={setAttachments}/>
         </div>
-
       </div>
     </div>
   )
