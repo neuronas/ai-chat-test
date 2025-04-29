@@ -20,10 +20,13 @@ export default function FileUpload(
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(event.target.files || []);
-    console.log("GG-44444", selectedFiles)
 
     if (selectedFiles) {
       setFiles(selectedFiles);
+      // remove always to enable input (onChange) upload same file
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   };
 
