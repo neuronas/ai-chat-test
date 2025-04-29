@@ -67,6 +67,21 @@ export function Chat() {
           onChange={handleInputChange}
           className="flex w-full border border-input px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm min-h-[24px] max-h-[calc(75dvh)] overflow-hidden resize-none rounded-2xl !text-base bg-muted pb-10 dark:border-zinc-700"
           placeholder="Send a message..."
+          onKeyDown={(event) => {
+            if (
+              event.key === 'Enter' &&
+              !event.shiftKey &&
+              !event.nativeEvent.isComposing
+            ) {
+              event.preventDefault();
+
+              if (status !== 'ready') {
+                // toast.error('Please wait for the model to finish its response!');
+              } else {
+                submit()
+              }
+            }
+          }}
         />
 
         <div className="flex flex-col gap-1 w-1/6">
