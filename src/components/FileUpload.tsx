@@ -16,7 +16,6 @@ export default function FileUpload(
     setFiles: Dispatch<SetStateAction<Array<File>>>;
   }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  // const [uploadQueue, setUploadQueue] = useState<boolean>(false);
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(event.target.files || []);
@@ -47,7 +46,7 @@ export default function FileUpload(
       {files.length > 0 ?
         <button
           onClick={handleClearFiles}
-          className="bg-red-500 hover:bg-red-600 text-white rounded-xl transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 ml-auto"
+          className="bg-red-500 hover:bg-red-600 max-w-xs w-full rounded-xl border border-solid transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 ml-auto"
         >
           Remove File
         </button>

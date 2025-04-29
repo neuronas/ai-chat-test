@@ -51,12 +51,11 @@ export async function POST(req: Request) {
             PIIDetector: tool({
               description: `You are a detector of common potential personally identifiable information assistant scan file using this prompt "${PIIDetectorPrompt}".`,
               parameters: MessageSchema,
-              execute: async ({ matches }, { messages }) => {
+              execute: async ({ matches }) => {
                 return matches || "no relevant data was found"
               }
             })
-          },
-          toolCallStreaming: true,
+          }
         });
           result.toDataStream();
 

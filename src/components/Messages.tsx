@@ -88,19 +88,6 @@ const components: Partial<Components> = {
       </span>
     );
   },
-  a: ({ children, ...props }) => {
-    return (
-      // @ts-expect-error
-      <Link
-        className="text-blue-500 hover:underline"
-        target="_blank"
-        rel="noreferrer"
-        {...props}
-      >
-        {children}
-      </Link>
-    );
-  },
   h1: ({ children, ...props }) => {
     return (
       <h1 className="text-3xl font-semibold mt-6 mb-2" {...props}>
