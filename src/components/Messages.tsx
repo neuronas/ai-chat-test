@@ -1,11 +1,20 @@
 
 "use client"
 import type { UIMessage } from 'ai';
+import { Spinner } from '../utils/Icons';
 
-export function Messages({msgHistory}:{msgHistory: UIMessage[] }) {
+export function Messages(
+  {
+    msgHistory,
+    toolInvocation
+  }:
+  {
+    msgHistory: UIMessage[],
+    toolInvocation: boolean
+  }) {
 
   return (
-    <div className="h-full p-10  overflow-y-scroll">
+    <div className="h-full p-10 overflow-y-scroll">
       <div className="text-sm/6 font-[family-name:var(--font-geist-mono)]">
         {msgHistory.map((item, k) => {
           if (item.role === "user") {
@@ -27,6 +36,13 @@ export function Messages({msgHistory}:{msgHistory: UIMessage[] }) {
             )
           }
         })}
+      </div>
+      <div className="flex justify-center">
+        {toolInvocation &&
+          <div className="flex items-center gap-4">
+            {`Calling tool...`} <Spinner color="text-black" />
+          </div>
+        }
       </div>
     </div>
   )
