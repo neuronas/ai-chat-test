@@ -43,7 +43,7 @@ export async function POST(req: Request) {
       execute: (dataStream) => {
         const result = streamText({
           model: vertex('gemini-2.0-flash'),
-          system: `If the user provides a file, call the "PIIDetector" tool.
+          system: `If the user provides attached file, always call the "PIIDetector" tool.
                    otherwise act as a friendly assistant! Keep your responses concise and helpful..`,
           messages: messages,
           maxSteps: 5,
