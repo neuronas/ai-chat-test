@@ -1,21 +1,23 @@
 
 "use client"
 import Image from "next/image";
-import { useState, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Messages } from './Messages';
 import { useChat } from '@ai-sdk/react';
+import { Spinner } from '../utils/Icons';
 import FileUpload from './FileUpload';
 
 export function Chat() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [attachments, setAttachments] = useState<Array<File>>([]);
+  const [toolInvocation, setToolInvocation] = useState<boolean>(false);
 
   const {
     messages,
     input,
     handleInputChange,
     handleSubmit,
-    status,
+    status
   } = useChat({
     onError: (error) => {
       console.log("error-----------", error)
@@ -40,9 +42,21 @@ export function Chat() {
     }
   }
 
+  useEffect(() => {
+    const lastMsg = messages[messages.length - 1]
+    if (lastMsg) {
+      const lastParts = lastMsg?.parts[lastMsg?.parts.length -1]
+      if (lastParts && lastParts.type === "tool-invocation") {
+        setToolInvocation(true)
+      } else {
+        setToolInvocation(false)
+      }
+    }
+  }, [messages])
+
   return (
     <div className="flex flex-col bg-gray-100 h-full rounded-xl mb-10 border border-gray-200">
-      <Messages msgHistory={messages} />
+      <Messages msgHistory={messages} toolInvocation={toolInvocation}/>
 
       <div className="flex gap-4 items-center w-full justify-end p-5">
         <textarea
@@ -59,14 +73,22 @@ export function Chat() {
             className="max-w-xs w-full rounded-xl border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 ml-auto"
             onClick={submit}
           >
-            Send
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
+            {status === "ready"
+              ? (
+                <>
+                  Send
+                  <Image
+                    className="dark:invert"
+                    src="/vercel.svg"
+                    alt="Vercel logomark"
+                    width={20}
+                    height={20}
+                  />
+                </>
+              )
+              :
+              <Spinner />
+              }
           </button>
           <FileUpload files={attachments} setFiles={setAttachments}/>
         </div>
