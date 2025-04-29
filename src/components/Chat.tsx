@@ -11,6 +11,7 @@ export function Chat() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [attachments, setAttachments] = useState<Array<File>>([]);
   const [toolInvocation, setToolInvocation] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
 
   const {
     messages,
@@ -21,6 +22,7 @@ export function Chat() {
   } = useChat({
     onError: (error) => {
       console.log("error-----------", error)
+      setError(error?.message || JSON.stringify(error))
     }
   });
 
@@ -56,7 +58,7 @@ export function Chat() {
 
   return (
     <div className="flex flex-col bg-gray-100 h-full rounded-xl mb-10 border border-gray-200">
-      <Messages msgHistory={messages} toolInvocation={toolInvocation}/>
+      <Messages msgHistory={messages} toolInvocation={toolInvocation} errorMsg={error}/>
 
       <div className="flex gap-4 items-center w-full justify-end p-5">
         <textarea
